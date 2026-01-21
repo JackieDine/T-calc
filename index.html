@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>做T成本专业版</title>
-    <link rel="manifest" href="manifest.json">
+    <title>做T成本助手</title>
+    
+    <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#2c3e50">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,21 +15,35 @@
             --up-color: #e74c3c;
             --down-color: #27ae60;
             --primary: #2c3e50;
-            --accent: #3498db;
             --bg: #f4f7f9;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: -apple-system, "PingFang SC", sans-serif;
+            font-family: -apple-system, sans-serif;
             background-color: var(--bg);
             margin: 0;
-            padding: env(safe-area-inset-top) 10px env(safe-area-inset-bottom) 10px;
+            /* 适配刘海屏和状态栏，确保内容不被遮挡 */
+            padding: env(safe-area-inset-top) 10px calc(env(safe-area-inset-bottom) + 10px) 10px;
             overflow-x: hidden;
         }
 
         .container { width: 100%; max-width: 500px; margin: 0 auto; }
+
+        /* 顶部看板：颜色与状态栏一致 */
+        .dashboard {
+            display: flex;
+            background: var(--primary);
+            color: white;
+            padding: 20px 10px;
+            border-radius: 0 0 12px 12px; /* 顶部平齐，底部圆角 */
+            margin: -env(safe-area-inset-top) -10px 12px -10px; /* 向上延伸至状态栏 */
+            text-align: center;
+        }
+        .dash-item { flex: 1; padding-top: env(safe-area-inset-top); }
+        .dash-label { font-size: 0.75rem; opacity: 0.8; margin-bottom: 5px; }
+        .dash-value { font-size: 1.3rem; font-weight: bold; }
 
         .card {
             background: #fff;
@@ -38,88 +53,38 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
-        /* 顶部看板 */
-        .dashboard {
-            display: flex;
-            background: var(--primary);
-            color: white;
-            padding: 18px 10px;
-            border-radius: 12px;
-            margin: 10px 0 12px 0;
-            text-align: center;
-        }
-        .dash-item { flex: 1; }
-        .dash-label { font-size: 0.75rem; opacity: 0.8; margin-bottom: 5px; }
-        .dash-value { font-size: 1.2rem; font-weight: bold; }
-
-        /* 模式切换器 */
         .mode-switch {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            background: #eee;
+            display: flex; align-items: center; justify-content: center;
+            padding: 12px; border-radius: 8px; margin-bottom: 15px;
+            transition: all 0.3s; border: 2px solid transparent;
         }
         .mode-stock { background: #fff1f0; border-color: #ffa39e; }
         .mode-etf { background: #e6f7ff; border-color: #91d5ff; }
+        .mode-switch input { width: 20px; height: 20px; margin-right: 10px; }
 
-        .mode-switch input { width: 22px; height: 22px; margin-right: 10px; cursor: pointer; }
-        .mode-switch strong { font-size: 1rem; color: #333; }
-
-        /* 表单布局 */
         .flex-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
         .field { flex: 1; min-width: calc(50% - 5px); }
         .field-full { min-width: 100%; }
 
         label { display: block; font-size: 0.75rem; color: #666; margin-bottom: 5px; font-weight: bold; }
         input {
-            width: 100%;
-            padding: 12px 10px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            background: #fff;
+            width: 100%; padding: 12px; border: 1px solid #ddd;
+            border-radius: 8px; font-size: 1rem; outline: none;
         }
 
         .btn-add {
-            width: 100%;
-            padding: 15px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
+            width: 100%; padding: 16px; background: var(--primary);
+            color: white; border: none; border-radius: 8px;
+            font-size: 1.1rem; font-weight: bold; cursor: pointer;
         }
 
         .record-item {
-            padding: 12px 0;
-            border-bottom: 1px solid #f0f0f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #f0f0f0;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .record-sub { font-size: 0.7rem; color: #999; margin-top: 2px; }
         .text-up { color: var(--up-color); font-weight: bold; }
         .text-down { color: var(--down-color); font-weight: bold; }
-
-        .clear-btn {
-            width: 100%;
-            text-align: center;
-            padding: 15px 0;
-            color: #999;
-            font-size: 0.8rem;
-            background: none;
-            border: none;
-            text-decoration: underline;
-        }
+        .clear-btn { width: 100%; text-align: center; padding: 15px; color: #999; font-size: 0.8rem; background: none; border: none; }
     </style>
 </head>
 <body>
@@ -131,22 +96,20 @@
             <div id="dispCost" class="dash-value">0.0000</div>
         </div>
         <div class="dash-item">
-            <div class="dash-label">累计盈亏</div>
+            <div class="dash-label">做T累计盈亏</div>
             <div id="dispProfit" class="dash-value">0.00</div>
         </div>
     </div>
 
     <div class="card">
         <div id="modeStatus" class="mode-switch mode-stock">
-            <input type="checkbox" id="isETF" onchange="updateModeUI()">
-            <strong>启用 ETF 模式</strong>
+            <input type="checkbox" id="isETF" onchange="updateUI()">
+            <strong>启用 ETF 模式 (免印花/过户)</strong>
         </div>
-
         <div class="flex-grid">
             <div class="field"><label>初始成本</label><input type="number" id="baseCost" step="0.001"></div>
             <div class="field"><label>持仓股数</label><input type="number" id="baseQty" step="100"></div>
         </div>
-
         <div class="flex-grid">
             <div class="field"><label>佣金%</label><input type="number" id="feeRate" value="0.025"></div>
             <div class="field tax-related"><label>过户费%</label><input type="number" id="transferRate" value="0.001"></div>
@@ -157,107 +120,4 @@
     <div class="card" style="border-top: 4px solid var(--up-color);">
         <div class="flex-grid">
             <div class="field"><label>做T买入</label><input type="number" id="buyPrice" step="0.001"></div>
-            <div class="field"><label>做T卖出</label><input type="number" id="sellPrice" step="0.001"></div>
-            <div class="field field-full"><label>操作数量</label><input type="number" id="tradeQty" step="100"></div>
-        </div>
-        <button class="btn-add" onclick="doCalculate()">记入流水并更新</button>
-    </div>
-
-    <div class="card">
-        <div id="recordList"></div>
-        <button class="clear-btn" onclick="resetAll()">重置所有数据</button>
-    </div>
-</div>
-
-<script>
-    // 注册 Service Worker 实现 PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => {
-                console.log('PWA ServiceWorker 注册成功');
-            }).catch(err => {
-                console.log('注册失败:', err);
-            });
-        });
-    }
-
-    let state = JSON.parse(localStorage.getItem('stock_t_pwa')) || {
-        records: [],
-        currCost: 0,
-        currQty: 0,
-        totalP: 0
-    };
-
-    function updateModeUI() {
-        const isETF = document.getElementById('isETF').checked;
-        const modeBox = document.getElementById('modeStatus');
-        const taxElements = document.querySelectorAll('.tax-related');
-        if(isETF) {
-            modeBox.className = "mode-switch mode-etf";
-            taxElements.forEach(el => el.style.display = 'none');
-        } else {
-            modeBox.className = "mode-switch mode-stock";
-            taxElements.forEach(el => el.style.display = 'block');
-        }
-    }
-
-    function doCalculate() {
-        const bc = parseFloat(document.getElementById('baseCost').value);
-        const bq = parseFloat(document.getElementById('baseQty').value);
-        const bp = parseFloat(document.getElementById('buyPrice').value);
-        const sp = parseFloat(document.getElementById('sellPrice').value);
-        const tq = parseFloat(document.getElementById('tradeQty').value);
-        const isETF = document.getElementById('isETF').checked;
-        const fR = parseFloat(document.getElementById('feeRate').value) / 100;
-        const tR = parseFloat(document.getElementById('taxRate').value) / 100;
-        const trR = parseFloat(document.getElementById('transferRate').value) / 100;
-
-        if(!bc || !bq || !bp || !sp || !tq) { alert("请填完所有空格"); return; }
-
-        if(state.records.length === 0) { state.currCost = bc; state.currQty = bq; }
-
-        const bAmt = bp * tq, sAmt = sp * tq;
-        const bFee = Math.max(isETF ? 0 : 5, bAmt * fR);
-        const sFee = Math.max(isETF ? 0 : 5, sAmt * fR);
-        const stamp = isETF ? 0 : (sAmt * tR);
-        const transfer = isETF ? 0 : (bAmt + sAmt) * trR;
-
-        const totalFees = bFee + sFee + stamp + transfer;
-        const netProfit = (sAmt - bAmt) - totalFees;
-
-        state.totalP += netProfit;
-        state.currCost = (state.currCost * state.currQty - netProfit) / state.currQty;
-
-        state.records.unshift({
-            msg: `B:${bp} / S:${sp} (${tq})`,
-            p: netProfit.toFixed(2),
-            c: state.currCost.toFixed(4),
-            time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-        });
-
-        localStorage.setItem('stock_t_pwa', JSON.stringify(state));
-        render();
-        document.getElementById('buyPrice').value = '';
-        document.getElementById('sellPrice').value = '';
-    }
-
-    function render() {
-        document.getElementById('dispCost').innerText = state.currCost ? state.currCost.toFixed(4) : "0.0000";
-        document.getElementById('dispProfit').innerText = state.totalP.toFixed(2);
-        document.getElementById('dispProfit').className = 'dash-value ' + (state.totalP >= 0 ? 'text-up' : 'text-down');
-        document.getElementById('recordList').innerHTML = state.records.map(r => `
-            <div class="record-item">
-                <div><div>${r.msg}</div><div class="record-sub">${r.time} · 成本:${r.c}</div></div>
-                <div class="${parseFloat(r.p)>=0?'text-up':'text-down'}" style="text-align:right">
-                    ${parseFloat(r.p)>=0?'+':''}${r.p}<br><small>${parseFloat(r.p)>=0?'↓ 降本':'↑ 加仓'}</small>
-                </div>
-            </div>
-        `).join('') || '<div style="text-align:center; color:#ccc; padding:20px;">尚无交易数据</div>';
-    }
-
-    function resetAll() { if(confirm("确定清除吗？")) { localStorage.removeItem('stock_t_pwa'); location.reload(); } }
-    updateModeUI();
-    render();
-</script>
-</body>
-</html>
+     
