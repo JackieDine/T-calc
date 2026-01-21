@@ -1,11 +1,10 @@
 {
   "name": "做T成本助手",
   "short_name": "做T助手",
-  "description": "专业股票ETF日内做T计算器",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#2c3e50",
+  "background_color": "#F0F3F5",
+  "theme_color": "#F0F3F5",
   "icons": [
     {
       "src": "./icon.png",
